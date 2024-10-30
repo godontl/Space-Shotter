@@ -1,6 +1,6 @@
 package it.unibs.eps.spaceshooter;
 
-import java.awt.Graphics; // inijninmijm
+import java.awt.Graphics; // il terminale è il capo
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
