@@ -1,6 +1,6 @@
 package it.unibs.eps.spaceshooter;
 
-//dvfdsjlkvij
+//ci sono riuscito
 
 public class Asteroide {
 	public void jcdocv() {
