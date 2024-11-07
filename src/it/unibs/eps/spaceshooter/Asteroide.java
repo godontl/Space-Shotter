@@ -4,6 +4,9 @@ package it.unibs.eps.spaceshooter;
 
 public class Asteroide {
 	public void jcdocv() {
+		System.out.println("csdfsjlò");
+		
+		
 		
 	}
 }
