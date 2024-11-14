@@ -1,6 +1,6 @@
 package it.unibs.eps.spaceshooter;
 
-// menu principale, eventuale classifica (da implementare)
+// menu principale, eventuale classifica (da implementare), costanti, boh
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
