@@ -33,7 +33,7 @@ public class Game extends JFrame {
 
 
         punteggioPanel = new GamePanel();
-        punteggioPanel.setSize(100,300);
+        punteggioPanel.setSize(100, 300);
         add(punteggioPanel, BorderLayout.NORTH);
 
         punteggio = new JLabel("PUNTEGGIO: ");
@@ -70,22 +70,22 @@ public class Game extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 // TODO Auto-generated method stub
-                if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     astronave.setVelocitaX(0);
 //				astronave.paintComponent(getGraphics(), Color.black);
 //				astronave.moveRight(gamePanel.getBounds());
                 }
-                if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                     astronave.setVelocitaX(0);
 //				astronave.paintComponent(getGraphics(), Color.black);
 //				astronave.moveLeft(gamePanel.getBounds());
                 }
-                if(e.getKeyCode() == KeyEvent.VK_UP) {
+                if (e.getKeyCode() == KeyEvent.VK_UP) {
                     astronave.setVelocitaY(0);
 //				astronave.paintComponent(getGraphics(), Color.black);
 //				astronave.moveUp(gamePanel.getBounds());
                 }
-                if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
                     astronave.setVelocitaY(0);
 //					astronave.paintComponent(getGraphics(), Color.black);
 //					astronave.moveDown(gamePanel.getBounds());
@@ -105,25 +105,25 @@ public class Game extends JFrame {
 */
 
 
-                if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     astronave.setVelocitaX(10);
                     astronave.paintComponent(getGraphics(), Color.black);
                     astronave.move(gamePanel.getBounds());
 //					astronave.moveRight(gamePanel.getBounds());
                 }
-                if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                     astronave.setVelocitaX(-10);
                     astronave.paintComponent(getGraphics(), Color.black);
                     astronave.move(gamePanel.getBounds());
 //					astronave.moveLeft(gamePanel.getBounds());
                 }
-                if(e.getKeyCode() == KeyEvent.VK_UP) {
+                if (e.getKeyCode() == KeyEvent.VK_UP) {
                     astronave.setVelocitaY(-10);
                     astronave.paintComponent(getGraphics(), Color.black);
                     astronave.move(gamePanel.getBounds());
 //					astronave.moveUp(gamePanel.getBounds());
                 }
-                if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
                     astronave.setVelocitaY(10);
                     astronave.paintComponent(getGraphics(), Color.black);
                     astronave.move(gamePanel.getBounds());
@@ -133,8 +133,6 @@ public class Game extends JFrame {
 
             }
         });
-
-
 
 
         Timer timer = new Timer(10, new ActionListener() {
@@ -224,12 +222,13 @@ public class Game extends JFrame {
             g.drawString("by NovaCode", 300, 650); // Testo di esempio
         }
     }
-//
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                new Game(); // Avvia la finestra di gioco
-//            }
-//        });
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Game(); // Avvia la finestra di gioco
+            }
+        });
+    }
 }
