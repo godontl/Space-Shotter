@@ -1,19 +1,28 @@
 package it.unibs.eps.spaceshooter;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import static it.unibs.eps.spaceshooter.MessageButton.*;
 import static it.unibs.eps.spaceshooter.SpaceShooterWorld.*;
 
 public class Game extends JFrame {
 
+
     private final GamePanel gamePanel;
+    private final GamePanel punteggioPanel;
+    private final Astronave astronave;
+    // private Proiettile p;
+    private final JLabel punteggio;
     private boolean youLoser = false;
     private int timeCounter = 0;
     private Timer gameTimer;
+
 
     public Game() {
         // Configurazione della finestra di gioco
@@ -22,25 +31,123 @@ public class Game extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+
+        punteggioPanel = new GamePanel();
+        punteggioPanel.setSize(100,300);
+        add(punteggioPanel, BorderLayout.NORTH);
+
+        punteggio = new JLabel("PUNTEGGIO: ");
+        punteggioPanel.add(punteggio);
+
         gamePanel = new GamePanel();
+
         add(gamePanel);
+
+
+        astronave = new Astronave();
+        gamePanel.add(astronave);
+
+
         setVisible(true);
 
         startGameLoop();
     }
 
+
     // da qui in poi da modificare (lavoro di ChatGPT)
     // Metodo per avviare il ciclo di gioco
     private void startGameLoop() {
-        Timer timer = new Timer(1000, new ActionListener() {
+        addKeyListener(new KeyListener() {
+
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // TODO Auto-generated method stub
+
+                System.out.println(e.getKeyCode());
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // TODO Auto-generated method stub
+                if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    astronave.setVelocitaX(0);
+//				astronave.paintComponent(getGraphics(), Color.black);
+//				astronave.moveRight(gamePanel.getBounds());
+                }
+                if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    astronave.setVelocitaX(0);
+//				astronave.paintComponent(getGraphics(), Color.black);
+//				astronave.moveLeft(gamePanel.getBounds());
+                }
+                if(e.getKeyCode() == KeyEvent.VK_UP) {
+                    astronave.setVelocitaY(0);
+//				astronave.paintComponent(getGraphics(), Color.black);
+//				astronave.moveUp(gamePanel.getBounds());
+                }
+                if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    astronave.setVelocitaY(0);
+//					astronave.paintComponent(getGraphics(), Color.black);
+//					astronave.moveDown(gamePanel.getBounds());
+                }
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+/*
+				// TODO Auto-generated method stub
+				if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+					Proiettile p = new Proiettile(astronave.getXMedia(), astronave.getY());
+					p.paintComponent(getGraphics());
+					gamePanel.add(p);
+				}
+*/
+
+
+                if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    astronave.setVelocitaX(10);
+                    astronave.paintComponent(getGraphics(), Color.black);
+                    astronave.move(gamePanel.getBounds());
+//					astronave.moveRight(gamePanel.getBounds());
+                }
+                if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    astronave.setVelocitaX(-10);
+                    astronave.paintComponent(getGraphics(), Color.black);
+                    astronave.move(gamePanel.getBounds());
+//					astronave.moveLeft(gamePanel.getBounds());
+                }
+                if(e.getKeyCode() == KeyEvent.VK_UP) {
+                    astronave.setVelocitaY(-10);
+                    astronave.paintComponent(getGraphics(), Color.black);
+                    astronave.move(gamePanel.getBounds());
+//					astronave.moveUp(gamePanel.getBounds());
+                }
+                if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    astronave.setVelocitaY(10);
+                    astronave.paintComponent(getGraphics(), Color.black);
+                    astronave.move(gamePanel.getBounds());
+//					astronave.moveDown(gamePanel.getBounds());
+                }
+
+
+            }
+        });
+
+
+
+
+        Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 timeCounter++;
-                gamePanel.update(); // Aggiorna lo stato del gioco
-                gamePanel.repaint(); // Ridisegna il pannello
+//                p.moveUp();
+                astronave.paintComponent(getGraphics(), Color.blue);
+//                gamePanel.update  // Aggiorna lo stato del gioco
+//                gamePanel.repaint(); // Ridisegna il pannello
 
                 // Condizione di fine gioco
-                if (timeCounter >= 10) { // Condizione farlocca: perde dopo 10 secondi
+                if (timeCounter >= 10000) { // Condizione farlocca: perde dopo 10 secondi
                     youLoser = true;
                 }
 
@@ -105,6 +212,7 @@ public class Game extends JFrame {
         // Metodo per aggiornare lo stato del gioco
         public void update() {
             //youLoser=true; // Qui potresti implementare la logica del gioco
+            paintComponent(getGraphics());
         }
 
         // Metodo per disegnare gli elementi di gioco
@@ -116,13 +224,12 @@ public class Game extends JFrame {
             g.drawString("by NovaCode", 300, 650); // Testo di esempio
         }
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new Game(); // Avvia la finestra di gioco
-            }
-        });
-    }
+//
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                new Game(); // Avvia la finestra di gioco
+//            }
+//        });
 }
