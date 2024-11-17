@@ -1,5 +1,6 @@
 package it.unibs.eps.spaceshooter;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*;
@@ -7,9 +8,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 
 import static it.unibs.eps.spaceshooter.MessageButton.*;
 import static it.unibs.eps.spaceshooter.SpaceShooterWorld.*;
+
 
 public class Game extends JFrame {
 
@@ -17,12 +24,15 @@ public class Game extends JFrame {
     private final GamePanel gamePanel;
     private final GamePanel punteggioPanel;
     private final Astronave astronave;
-    // private Proiettile p;
+    private ArrayList<Proiettile> proiettili = new ArrayList<Proiettile>();
     private final JLabel punteggio;
     private boolean youLoser = false;
     private int timeCounter = 0;
     private Timer gameTimer;
+    private BufferedImage img;
 
+    private JLabel labelAstronave;
+    private JLabel labelProiettile;
 
     public Game() {
         // Configurazione della finestra di gioco
@@ -43,16 +53,43 @@ public class Game extends JFrame {
 
         add(gamePanel);
 
-
         astronave = new Astronave();
-        gamePanel.add(astronave);
 
+        try {
+
+            URL url = new URL("https://th.bing.com/th/id/OIP.FUt0lq7xZDgngJ2zoh8lFAHaL0?w=802&h=1280&rs=1&pid=ImgDetMain");
+            img = ImageIO.read(url);
+        } catch (IOException e) {
+            System.out.println("Errore");
+        }
+//        getScaledImage(img, 100, 50);
+
+//
+//        ImageIcon icon = new ImageIcon(img);
+//
+//        JLabel label = new JLabel();
+//        label.setSize(1,15);
+//        icon = new ImageIcon(img);
+//        gamePanel.add(label);
+//        label.setLocation(300,200);
+//        label.setIcon(icon);
 
         setVisible(true);
 
         startGameLoop();
     }
 
+
+    Image getScaledImage(Image Img, int wt, int ht) {
+        BufferedImage resizedImg = new BufferedImage(wt, ht, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(Img, 0, 0, wt, ht, null);
+        g2.dispose();
+
+        return resizedImg;
+    }
 
     // da qui in poi da modificare (lavoro di ChatGPT)
     // Metodo per avviare il ciclo di gioco
@@ -64,13 +101,14 @@ public class Game extends JFrame {
             public void keyTyped(KeyEvent e) {
                 // TODO Auto-generated method stub
 
-                System.out.println(e.getKeyCode());
+//				System.out.println(e.getKeyCode());
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                // TODO Auto-generated method stub
-                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                // TODO Auto-generated method stuba
+
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT && e.getKeyCode() != KeyEvent.VK_SPACE) {
                     astronave.setVelocitaX(0);
 //				astronave.paintComponent(getGraphics(), Color.black);
 //				astronave.moveRight(gamePanel.getBounds());
@@ -95,39 +133,36 @@ public class Game extends JFrame {
 
             @Override
             public void keyPressed(KeyEvent e) {
-/*
-				// TODO Auto-generated method stub
-				if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-					Proiettile p = new Proiettile(astronave.getXMedia(), astronave.getY());
-					p.paintComponent(getGraphics());
-					gamePanel.add(p);
-				}
-*/
+//				// TODO Auto-generated method stub
+                if (e.getKeyCode() == KeyEvent.VK_SPACE)
+                    proiettili.add(new Proiettile(astronave.getXMedia(), astronave.getY()));
 
 
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    astronave.setVelocitaX(10);
+                    astronave.setVelocitaX(5);
                     astronave.paintComponent(getGraphics(), Color.black);
                     astronave.move(gamePanel.getBounds());
 //					astronave.moveRight(gamePanel.getBounds());
                 }
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    astronave.setVelocitaX(-10);
+                    astronave.setVelocitaX(-5);
                     astronave.paintComponent(getGraphics(), Color.black);
                     astronave.move(gamePanel.getBounds());
 //					astronave.moveLeft(gamePanel.getBounds());
                 }
                 if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    astronave.setVelocitaY(-10);
+                    astronave.setVelocitaY(-5);
                     astronave.paintComponent(getGraphics(), Color.black);
                     astronave.move(gamePanel.getBounds());
 //					astronave.moveUp(gamePanel.getBounds());
                 }
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    astronave.setVelocitaY(10);
+                    astronave.setVelocitaY(5);
                     astronave.paintComponent(getGraphics(), Color.black);
                     astronave.move(gamePanel.getBounds());
 //					astronave.moveDown(gamePanel.getBounds());
+
+
                 }
 
 
@@ -139,8 +174,13 @@ public class Game extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 timeCounter++;
-//                p.moveUp();
+                for (Proiettile p : proiettili) {
+                    p.paintComponent(getGraphics(), Color.blue);
+                    p.moveUp();
+                    p.paintComponent(getGraphics(), Color.black);
+                }
                 astronave.paintComponent(getGraphics(), Color.blue);
+
 //                gamePanel.update  // Aggiorna lo stato del gioco
 //                gamePanel.repaint(); // Ridisegna il pannello
 
