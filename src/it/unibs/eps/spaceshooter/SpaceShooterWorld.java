@@ -52,7 +52,6 @@ public class SpaceShooterWorld extends JFrame {
         new Game();
     }
 
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
