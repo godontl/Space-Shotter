@@ -1,9 +1,19 @@
 package it.unibs.eps.spaceshooter;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Random;
 
-public class Asteroide {
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+
+public class Asteroide extends Thread{
+
     private int x, y;
     private int width, height;
     private int speed = 2;
@@ -21,7 +31,7 @@ public class Asteroide {
         g.fillOval(x, y, width, height); // Disegna l'asteroide
     }
 
-    public void moveDown() {
+    public void run() {
         y += speed;  // L'asteroide scende
     }
 
@@ -44,7 +54,6 @@ public class Asteroide {
 
     public void setSpeed(int newSpeed) {
         this.speed = newSpeed;
+
     }
 }
-
-

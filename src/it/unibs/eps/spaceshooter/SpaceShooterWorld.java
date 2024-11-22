@@ -1,27 +1,19 @@
 package it.unibs.eps.spaceshooter;
 
-// menu principale, eventuale classifica (da implementare), costanti, boh
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import java.awt.*;
 import static it.unibs.eps.spaceshooter.MessageButton.*;
-
 
 public class SpaceShooterWorld extends JFrame {
     public static final int HEIGHT_FRAME = 700;
     public static final int WIDTH_FRAME = 400;
     public static final String GAME_TITLE = "Space Shooter";
 
-    // Altre costanti di gioco
-    public static final int PLAYER_SPEED = 5;
-    public static final Color BACKGROUND_COLOR = Color.BLACK;
+    private JTextField nameField; // Campo per inserire il nome
 
     public SpaceShooterWorld() {
         setTitle(GAME_TITLE);
-        setSize(HEIGHT_FRAME, WIDTH_FRAME);
+        setSize(WIDTH_FRAME, HEIGHT_FRAME);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -32,33 +24,41 @@ public class SpaceShooterWorld extends JFrame {
         ComponentWithConstraints welcomeText = createText("Benvenuto in " + GAME_TITLE + "!", "Arial", Font.BOLD, 20, 0, 0);
         panel.add(welcomeText.component, welcomeText.constraints);
 
+        // Creazione etichetta per il nome
+        ComponentWithConstraints nameLabel = createText("Inserisci il tuo nome:", "Arial", Font.PLAIN, 14, 0, 1);
+        panel.add(nameLabel.component, nameLabel.constraints);
+
+        // Creazione campo di testo per il nome
+        nameField = new JTextField(15);
+        GridBagConstraints fieldConstraints = new GridBagConstraints();
+        fieldConstraints.gridx = 0;
+        fieldConstraints.gridy = 2;
+        fieldConstraints.insets = new Insets(10, 10, 10, 10);
+        panel.add(nameField, fieldConstraints);
+
         // Creazione del pulsante "Inizia a giocare!"
-        ComponentWithConstraints startButton = createButton("Inizia a giocare!", 200, 50, e -> startGame(), "Arial", Font.BOLD, 18, 0, 1);
+        ComponentWithConstraints startButton = createButton("Inizia a giocare!", 200, 50, e -> startGame(), "Arial", Font.BOLD, 18, 0, 3);
         panel.add(startButton.component, startButton.constraints);
 
         // Creazione testo crediti
-        ComponentWithConstraints creditText = createText("by NovaCode", "SanSerif", Font.ITALIC, 10, 0, 2);
+        ComponentWithConstraints creditText = createText("by NovaCode", "SanSerif", Font.ITALIC, 10, 0, 4);
         panel.add(creditText.component, creditText.constraints);
 
-
-        //Visibilità pannello
+        // Aggiunta del pannello al frame
         add(panel);
         setVisible(true);
     }
 
     private void startGame() {
-        JOptionPane.showMessageDialog(this, "Il gioco inizierà una volta cliccato il tasto!");
-        dispose();
-        new Game();
-    }
+        String playerName = nameField.getText().trim();
+        int playerScore=0;
+        if (playerName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Per favore, inserisci il tuo nome!", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new SpaceShooterWorld();
-            }
-        });
+        JOptionPane.showMessageDialog(this, "Il gioco inizierà dopo aver confermato!");
+        dispose();
+        new Game(playerName, playerScore); // Passa il nome del giocatore al gioco
     }
 }
-
