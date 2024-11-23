@@ -13,6 +13,11 @@ public class Player {
         this.score = 0; // Il punteggio parte da zero
     }
 
+    public Player(Player player) {
+        this.name = player.name;
+        this.score = player.score;
+    }
+
     // Getter per il nome
     public String getName() {
         return name;

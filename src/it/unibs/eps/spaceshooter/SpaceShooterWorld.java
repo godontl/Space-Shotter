@@ -10,15 +10,17 @@ public class SpaceShooterWorld extends JFrame {
     public static final String GAME_TITLE = "Space Shooter";
 
     private JTextField nameField; // Campo per inserire il nome
+    private static Ranking ranking;
 
     public SpaceShooterWorld() {
         setTitle(GAME_TITLE);
-        setSize(WIDTH_FRAME, HEIGHT_FRAME);
+        setSize(HEIGHT_FRAME, WIDTH_FRAME);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // Creazione del pannello principale
         JPanel panel = new JPanel(new GridBagLayout());
+
 
         // Creazione testo benvenuto
         ComponentWithConstraints welcomeText = createText("Benvenuto in " + GAME_TITLE + "!", "Arial", Font.BOLD, 20, 0, 0);
@@ -47,6 +49,14 @@ public class SpaceShooterWorld extends JFrame {
         // Aggiunta del pannello al frame
         add(panel);
         setVisible(true);
+
+        this.ranking = new Ranking();
+
+
+    }
+
+    public static Ranking getRanking() {
+        return ranking;
     }
 
     private void startGame() {

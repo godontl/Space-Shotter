@@ -34,8 +34,8 @@ public class Game extends JFrame {
 
     // Modificato il costruttore per utilizzare la variabile player come attributo
     public Game(String playerName, int playerScore) {
-        this.player = new Player(playerName, playerScore);  // Inizializzazione dell'oggetto Player
-        this.ranking = new Ranking();  // Inizializzazione della classifica
+        this.player = new Player(playerName, playerScore);
+        this.ranking = SpaceShooterWorld.getRanking();
 
         // Configurazione della finestra di gioco
         setTitle(GAME_TITLE + " - Gioco");
@@ -197,8 +197,19 @@ public class Game extends JFrame {
 
     // Metodo per riavviare il gioco
     private void restartGame() {
+        JTextField nameField = new JTextField(player.getName()); // Precompila con il nome attuale
+        int option = JOptionPane.showConfirmDialog(this, nameField, "Inserisci il nome del nuovo giocatore", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (option == JOptionPane.OK_OPTION) {
+            String newName = nameField.getText().trim();
+            if (!newName.isEmpty()) {
+                player.setName(newName); // Aggiorna il nome del giocatore
+            } else {
+                JOptionPane.showMessageDialog(this, "Il nome non può essere vuoto! Verrà mantenuto il nome attuale.", "Errore", JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
         dispose();
-        new Game(player.getName(), player.getScore()); // Riavvia il gioco mantenendo lo stesso giocatore
+        new Game(player.getName(), 0);
     }
 
     // Metodo per chiudere il gioco
@@ -209,7 +220,7 @@ public class Game extends JFrame {
 
     // Metodo per la gestione della classifica (se desiderato)
     private void rankingGame() {
-        ranking.printRanking();  // Mostra la classifica (modifica questa parte per visualizzare la classifica)
+        ranking.showRanking();  // Mostra la classifica (modifica questa parte per visualizzare la classifica)
     }
 
     // Classe interna per il pannello di gioco

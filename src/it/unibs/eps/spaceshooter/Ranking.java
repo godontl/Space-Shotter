@@ -1,54 +1,100 @@
 package it.unibs.eps.spaceshooter;
-
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.List;
 
 public class Ranking {
-    private ArrayList<Player> players;  // Lista dei giocatori
+    private final List<Player> rankingList;
 
     public Ranking() {
-        players = new ArrayList<>();
+        rankingList = new ArrayList<>();
     }
 
-    // Aggiungi un nuovo giocatore alla classifica
     public void addPlayer(Player player) {
-        players.add(player);
-        sortRanking();  // Ordina la classifica ogni volta che un giocatore viene aggiunto
+        Player newPlayer = new Player(player.getName(), player.getScore());
+        rankingList.add(player);
+        rankingList.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));
     }
 
-    // Ordina i giocatori in base al punteggio (decrescente)
-    private void sortRanking() {
-        Collections.sort(players, new Comparator<Player>() {
-            @Override
-            public int compare(Player p1, Player p2) {
-                // Ordina per punteggio (decrescente)
-                return Integer.compare(p2.getScore(), p1.getScore());
-            }
+    public List<Player> getRankingList() {
+        return rankingList;
+    }
+
+    // Metodo per visualizzare la classifica in una finestra
+    public void showRanking() {
+        // Crea una finestra per la classifica
+        JFrame rankingWindow = new JFrame("Classifica");
+        rankingWindow.setSize(500, 400);
+        rankingWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        rankingWindow.setLocationRelativeTo(null);
+
+        // Pannello principale con layout verticale
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBackground(Color.DARK_GRAY);
+
+        // Titolo della finestra
+        JLabel titleLabel = new JLabel("Classifica Giocatori", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+
+        // Tabella per visualizzare i giocatori
+        String[] columns = {"Posizione", "Giocatore", "Punteggio"};
+        Object[][] data = new Object[rankingList.size()][3];
+
+        for (int i = 0; i < rankingList.size(); i++) {
+            Player player = rankingList.get(i);
+            data[i][0] = i + 1;  // Posizione
+            data[i][1] = player.getName();  // Nome
+            data[i][2] = player.getScore();  // Punteggio
+        }
+
+        JTable rankingTable = new JTable(data, columns);
+        rankingTable.setFont(new Font("Arial", Font.PLAIN, 14));
+        rankingTable.setRowHeight(25);
+        rankingTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        rankingTable.getTableHeader().setBackground(Color.LIGHT_GRAY);
+        rankingTable.getTableHeader().setForeground(Color.BLACK);
+        rankingTable.setBackground(Color.WHITE);
+
+        JScrollPane scrollPane = new JScrollPane(rankingTable);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Pannello per i pulsanti
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        buttonPanel.setBackground(Color.DARK_GRAY);
+
+        // Pulsante "Chiudi"
+        JButton closeButton = new JButton("Chiudi");
+        closeButton.setFont(new Font("Arial", Font.BOLD, 14));
+        closeButton.setForeground(Color.WHITE);
+        closeButton.setBackground(Color.RED);
+        closeButton.setFocusPainted(false);
+        closeButton.addActionListener(e -> rankingWindow.dispose());
+        buttonPanel.add(closeButton);
+
+        // Pulsante "Nuova Partita"
+        JButton newGameButton = new JButton("Nuova Partita");
+        newGameButton.setFont(new Font("Arial", Font.BOLD, 14));
+        newGameButton.setForeground(Color.WHITE);
+        newGameButton.setBackground(Color.GREEN);
+        newGameButton.setFocusPainted(false);
+        newGameButton.addActionListener(e -> {
+            rankingWindow.dispose();
+            new SpaceShooterWorld();  // Avvia una nuova partita
         });
-    }
+        buttonPanel.add(newGameButton);
 
-    // Ottieni la classifica completa come stringa
-    public String getRanking() {
-        StringBuilder rankingStr = new StringBuilder();
-        for (int i = 0; i < players.size(); i++) {
-            Player player = players.get(i);
-            rankingStr.append(i + 1).append(". ").append(player.getName())
-                    .append(" - ").append(player.getScore()).append(" punti\n");
-        }
-        return rankingStr.toString();
-    }
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-    // Ottieni il miglior punteggio
-    public Player getTopPlayer() {
-        if (!players.isEmpty()) {
-            return players.get(0);  // Il primo giocatore è il top player
-        }
-        return null;  // Nessun giocatore
-    }
+        // Aggiungi il pannello principale alla finestra
+        rankingWindow.add(mainPanel);
 
-    // Mostra la classifica
-    public void printRanking() {
-        System.out.println(getRanking());
+        // Mostra la finestra
+        rankingWindow.setVisible(true);
     }
 }
