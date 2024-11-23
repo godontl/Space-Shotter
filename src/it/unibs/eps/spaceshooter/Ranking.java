@@ -22,7 +22,7 @@ public class Ranking {
     }
 
     // Metodo per visualizzare la classifica in una finestra
-    public void showRanking() {
+    public void showRanking(Game game) {
         // Crea una finestra per la classifica
         JFrame rankingWindow = new JFrame("Classifica");
         rankingWindow.setSize(500, 400);
@@ -74,7 +74,10 @@ public class Ranking {
         closeButton.setForeground(Color.WHITE);
         closeButton.setBackground(Color.RED);
         closeButton.setFocusPainted(false);
-        closeButton.addActionListener(e -> rankingWindow.dispose());
+        closeButton.addActionListener(e -> {
+            rankingWindow.dispose();  // Chiudi la finestra della classifica
+            game.restartGame();  // Chiama restartGame di Game per riavviare la partita
+        });
         buttonPanel.add(closeButton);
 
         // Pulsante "Nuova Partita"

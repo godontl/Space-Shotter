@@ -2,7 +2,6 @@ package it.unibs.eps.spaceshooter;
 
 import javax.swing.*;
 
-import it.unibs.eps.spaceshooter.Asteroide;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,53 +12,58 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import static it.unibs.eps.spaceshooter.MessageButton.*;
-import static it.unibs.eps.spaceshooter.SpaceShooterWorld.*;
 
 
 public class Game extends JFrame {
     private final GamePanel gamePanel;
-    private final GamePanel punteggioPanel;
+    private final JPanel punteggioPanel;
     private final Astronave astronave;
-    private ArrayList<Proiettile> proiettili = new ArrayList<Proiettile>();
-    private ArrayList<Asteroide> asteroidi = new ArrayList<Asteroide>();
-    private final JLabel punteggio;
-    private final JLabel name;
-    private boolean youLoser = false;
-    private JTextField nameField;
-    private JTextField scoreField;
-    private JLabel timeLabel;
+    private ArrayList<Proiettile> proiettili = new ArrayList<>();
+    private ArrayList<Asteroide> asteroidi = new ArrayList<>();
+    private final JLabel punteggioLabel;
+    private final JLabel timeLabel;
+    private final JLabel nameLabel;
     private int gameTime = 0;
-    private Ranking ranking;
-    private Player player;
+    private boolean gameOver = false;
 
-    // Modificato il costruttore per utilizzare la variabile player come attributo
+    private final Ranking ranking;
+    private final Player player;
+
     public Game(String playerName, int playerScore) {
         this.player = new Player(playerName, playerScore);
         this.ranking = SpaceShooterWorld.getRanking();
 
-        // Configurazione della finestra di gioco
-        setTitle(GAME_TITLE + " - Gioco");
-        setSize(WIDTH_FRAME, HEIGHT_FRAME);
+        // Configurazione finestra
+        setTitle(SpaceShooterWorld.GAME_TITLE + " - Gioco");
+        setSize(SpaceShooterWorld.WIDTH_FRAME, SpaceShooterWorld.HEIGHT_FRAME);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
 
-        punteggioPanel = new GamePanel();
-        punteggioPanel.setSize(300, 300);
-        add(punteggioPanel, BorderLayout.NORTH);
+        // Pannello punteggio
+        punteggioPanel = new JPanel();
+        punteggioPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        punteggioPanel.setBackground(Color.DARK_GRAY);
 
-        punteggio = new JLabel("PUNTEGGIO: " + player.getScore() + "   ");
-        punteggioPanel.add(punteggio);
+        nameLabel = new JLabel("Giocatore: " + player.getName()+ "   ");
+        nameLabel.setForeground(Color.WHITE);
+        punteggioPanel.add(nameLabel);
 
-        name = new JLabel("GIOCATORE: " + player.getName() + "  ");
-        punteggioPanel.add(name);
+        punteggioLabel = new JLabel("Punteggio: " + player.getScore()+ "   ");
+        punteggioLabel.setForeground(Color.WHITE);
+        punteggioPanel.add(punteggioLabel);
 
-        timeLabel = new JLabel("TEMPO: 0s");
+        timeLabel = new JLabel("Tempo: 0s");
+        timeLabel.setForeground(Color.WHITE);
         punteggioPanel.add(timeLabel);
 
+        add(punteggioPanel, BorderLayout.NORTH);
+
+        // Pannello di gioco
         gamePanel = new GamePanel();
+        add(gamePanel, BorderLayout.CENTER);
 
-        add(gamePanel);
-
+        // Astronave
         astronave = new Astronave();
 
         setVisible(true);
@@ -67,23 +71,27 @@ public class Game extends JFrame {
         startGameLoop();
     }
 
-    // Metodo per avviare il ciclo di gioco
     private void startGameLoop() {
+        // Listener per i controlli
         addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {}
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_RIGHT) astronave.setVelocitaX(0);
-                if (e.getKeyCode() == KeyEvent.VK_LEFT) astronave.setVelocitaX(0);
-                if (e.getKeyCode() == KeyEvent.VK_UP) astronave.setVelocitaY(0);
-                if (e.getKeyCode() == KeyEvent.VK_DOWN) astronave.setVelocitaY(0);
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    astronave.setVelocitaX(0);
+                }
+                if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    astronave.setVelocitaY(0);
+                }
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_SPACE) proiettili.add(new Proiettile(astronave.getXMedia(), astronave.getY()));
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                    proiettili.add(new Proiettile(astronave.getXMedia(), astronave.getY()));
+                }
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) astronave.setVelocitaX(5);
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) astronave.setVelocitaX(-5);
                 if (e.getKeyCode() == KeyEvent.VK_UP) astronave.setVelocitaY(-5);
@@ -91,72 +99,20 @@ public class Game extends JFrame {
             }
         });
 
-        // Timer per aggiornare il gioco ogni 10 ms (100 FPS circa)
-        Timer timer = new Timer(1, new ActionListener() {
+        // Timer di gioco
+        Timer timer = new Timer(16, new ActionListener() { // Circa 60 FPS
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (gameTime == 0) astronave.paintImage(getGraphics());
+                // Aggiorna lo stato di gioco
+                updateGameState();
 
+                // Richiama il rendering
+                gamePanel.repaint();
 
-                if(gameTime % 100 == 0)
-                    asteroidi.add(new Asteroide((int)(Math.random()*300), 0));
-
-                Iterator<Asteroide> i1 = asteroidi.iterator();
-                while(i1.hasNext()) {
-                    Asteroide a = i1.next();
-                    if(a.getY() > HEIGHT_FRAME) {
-                        i1.remove();
-                        a.paintComponent(getGraphics(), Color.black);
-                    }
-                    else {
-                        a.paintComponent(getGraphics(), Color.black);
-                        a.run();
-                        a.paintComponent(getGraphics(), Color.blue);
-                    }
-                }
-
-
-
-
-
-                // Movimentazione e disegno dei proiettili
-                Iterator<Proiettile> i2 = proiettili.iterator();
-                while(i2.hasNext()) {
-                    Proiettile p = i2.next();
-                    if(p.getY() < 100) {
-                        p.paintComponent(getGraphics(), Color.black);
-                        i2.remove();
-                    }
-                    else {
-                        p.paintComponent(getGraphics(), Color.black);
-                        p.run();
-                        p.paintComponent(getGraphics(), Color.blue);
-                    }
-                }
-
-                if (!astronave.isMoving()) {
-                    astronave.removeImage(getGraphics());
-                    astronave.move(gamePanel.getBounds());
-                    astronave.paintImage(getGraphics());
-                }
-
-                // Incrementa il tempo di gioco e aggiorna l'etichetta
-                gameTime++;
-                player.addScore(gameTime / 100);  // Incrementa il punteggio in base al tempo (modificabile)
-
-                timeLabel.setText(" TEMPO: " + gameTime / 100 + "s");
-                punteggio.setText("PUNTEGGIO: " + player.getScore() + "   "); // Aggiorna il punteggio visibile
-
-                punteggioPanel.repaint();
-
-                // Condizione di fine gioco
-                if (gameTime >= 1000) {
-                    youLoser = true;
-                }
-
-                if (youLoser) {
+                // Controlla condizione di fine gioco
+                if (gameOver) {
+                    ((Timer) e.getSource()).stop();
                     endGame();
-                    ((Timer) e.getSource()).stop();  // Ferma il timer
                 }
             }
         });
@@ -164,9 +120,74 @@ public class Game extends JFrame {
         timer.start();
     }
 
-    // Metodo per terminare il gioco
+    private void updateGameState() {
+        // Muovi l'astronave
+        astronave.move(gamePanel.getBounds());
+
+        // Muovi gli asteroidi
+        Iterator<Asteroide> asteroidIterator = asteroidi.iterator();
+        while (asteroidIterator.hasNext()) {
+            Asteroide asteroide = asteroidIterator.next();
+
+            // Ciclo interno: verifica collisione tra questo asteroide e tutti i proiettili
+            Iterator<Proiettile> projectileIterator = proiettili.iterator();
+            while (projectileIterator.hasNext()) {
+                Proiettile proiettile = projectileIterator.next();
+
+                if (asteroide.checkCollisionWithProjectile(proiettile)) {
+                    // Collisione rilevata: rimuovi asteroide e proiettile
+                    asteroidIterator.remove();
+                    projectileIterator.remove();
+                    player.addScore(5000); // Aggiungi punti per la distruzione dell'asteroide
+                    break; // Esci dal ciclo dei proiettili (l'asteroide è già stato rimosso)
+                }
+            }
+
+            // Controlla collisione con l'astronave
+            if (asteroide.checkCollision(astronave)) {
+                gameOver = true;
+                endGame();
+                return; // per uscire da updateGameState
+            }
+
+            // Muovi l'asteroide
+            asteroide.run();
+
+            // Rimuovi asteroidi fuori dallo schermo
+            if (asteroide.getY() > gamePanel.getHeight()) {
+                asteroidIterator.remove();
+            }
+        }
+
+
+        // Muovi i proiettili
+        Iterator<Proiettile> projectileIterator = proiettili.iterator();
+        while (projectileIterator.hasNext()) {
+            Proiettile proiettile = projectileIterator.next();
+            proiettile.run();
+
+            // Rimuovi proiettili fuori dallo schermo
+            if (proiettile.getY() < 0) {
+                projectileIterator.remove();
+            }
+        }
+
+        // Genera nuovi asteroidi
+        if (gameTime % 50 == 0) {
+            asteroidi.add(new Asteroide((int) (Math.random() * gamePanel.getWidth()), 0));
+        }
+
+        gameTime++;
+        player.addScore(gameTime / 100);  // Incrementa il punteggio in base al tempo (modificabile)
+
+        timeLabel.setText(" TEMPO: " + gameTime / 60 + "s   ");
+        punteggioLabel.setText("PUNTEGGIO: " + player.getScore() + "   "); // Aggiorna il punteggio visibile
+    }
+
     private void endGame() {
-        ranking.addPlayer(player);  // Aggiungi il giocatore alla classifica
+        if (!ranking.getRankingList().contains(player)) {
+            ranking.addPlayer(player);
+        }
         getContentPane().removeAll();
         setLayout(new BorderLayout());
 
@@ -175,6 +196,8 @@ public class Game extends JFrame {
         // Testo di fine gioco
         ComponentWithConstraints lostTextComponent = createText("Hai perso!", "Arial", Font.BOLD, 20, 0, 0);
         endPanel.add(lostTextComponent.component, lostTextComponent.constraints);
+
+
 
         // Crediti
         ComponentWithConstraints creditTextComponent = createText("by NovaCode", "SanSerif", Font.ITALIC, 10, 0, 4);
@@ -190,13 +213,18 @@ public class Game extends JFrame {
         ComponentWithConstraints endButtonComponent = createButton("Esci", 300, 25, e -> closeGame(), "Arial", Font.BOLD, 15, 0, 3);
         endPanel.add(endButtonComponent.component, endButtonComponent.constraints);
 
+
+
+
+
         add(endPanel, BorderLayout.CENTER);
         revalidate();
         repaint();
     }
 
+
     // Metodo per riavviare il gioco
-    private void restartGame() {
+    public void restartGame() {
         JTextField nameField = new JTextField(player.getName()); // Precompila con il nome attuale
         int option = JOptionPane.showConfirmDialog(this, nameField, "Inserisci il nome del nuovo giocatore", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (option == JOptionPane.OK_OPTION) {
@@ -220,21 +248,35 @@ public class Game extends JFrame {
 
     // Metodo per la gestione della classifica (se desiderato)
     private void rankingGame() {
-        ranking.showRanking();  // Mostra la classifica (modifica questa parte per visualizzare la classifica)
+        if (ranking.getRankingList().size() > 0) {
+            ranking.showRanking(this);  // Mostra la classifica
+        }
     }
 
-    // Classe interna per il pannello di gioco
-    private static class GamePanel extends JPanel {
-        public GamePanel() {
-            setBackground(Color.black);
-        }
-
-        // Metodo per disegnare gli elementi di gioco
+    // Classe per il rendering
+    private class GamePanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.setColor(Color.WHITE);
-            g.drawString("by NovaCode", 300, 650);  // Testo di esempio
+
+            // Sfondo
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, getWidth(), getHeight());
+
+            // Disegna l'astronave
+            astronave.paintComponent(g, Color.RED);
+
+            // Disegna asteroidi
+            for (Asteroide asteroide : asteroidi) {
+                asteroide.paintComponent(g, Color.GRAY);
+            }
+
+            // Disegna proiettili
+            for (Proiettile proiettile : proiettili) {
+                proiettile.paintComponent(g, Color.BLUE);
+            }
+
         }
     }
+
 }

@@ -5,12 +5,12 @@ package it.unibs.eps.spaceshooter;
 
 public class Player {
     private String name;
-    private int score;
+    private int score=0;
 
     // Costruttore per inizializzare il giocatore
-    public Player(String name, int playerScore) {
+    public Player(String name, int score) {
         this.name = name;
-        this.score = 0; // Il punteggio parte da zero
+        this.score =score; // Il punteggio parte da zero
     }
 
     public Player(Player player) {
