@@ -197,11 +197,10 @@ public class Game extends JFrame {
         setLayout(new BorderLayout());
 
         JPanel endPanel = new JPanel(new GridBagLayout());
-        endPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20)); // Layout centrato
-        endPanel.setBackground(Color.DARK_GRAY);
+        endPanel.setBackground(Color.BLACK);
 
         // Testo di fine gioco
-        ComponentWithConstraints lostTextComponent = createText("Hai perso!", "Arial", Font.BOLD, 20, 0, 0, Color.WHITE);
+        ComponentWithConstraints lostTextComponent = createText("Hai perso!", customFont.getFontName(), Font.BOLD, 20, 0, 0, Color.WHITE);
         endPanel.add(lostTextComponent.component, lostTextComponent.constraints);
 
 
@@ -211,13 +210,13 @@ public class Game extends JFrame {
         endPanel.add(creditTextComponent.component, creditTextComponent.constraints);
 
         // Creazione pulsanti
-        ComponentWithConstraints restartButtonComponent = createButton("Fai un'altra partita", 300, 25, e -> restartGame(), "Arial", Font.BOLD, 15, 0, 1, Color.GREEN, Color.BLACK);
+        ComponentWithConstraints restartButtonComponent = createButton("Fai un'altra partita", this::restartGame, smallcustomFont.getFontName(), Font.BOLD, 15, 0, 1, Color.WHITE, Color.DARK_GRAY);
         endPanel.add(restartButtonComponent.component, restartButtonComponent.constraints);
 
-        ComponentWithConstraints rankingButtonComponent= createButton("Guarda classifica", 300,25, e -> rankingGame(), "Arial", Font.BOLD, 15, 0, 2, Color.BLUE, Color.WHITE);
+        ComponentWithConstraints rankingButtonComponent= createButton("Guarda classifica", this::rankingGame, smallcustomFont.getFontName(), Font.BOLD, 15, 0, 2, Color.DARK_GRAY, Color.LIGHT_GRAY);
         endPanel.add(rankingButtonComponent.component, rankingButtonComponent.constraints);
 
-        ComponentWithConstraints endButtonComponent = createButton("Esci", 300, 25, e -> closeGame(), "Arial", Font.BOLD, 15, 0, 3, Color.RED, Color.WHITE);
+        ComponentWithConstraints endButtonComponent = createButton("Esci", this::closeGame, smallcustomFont.getFontName(), Font.BOLD, 15, 0, 3, Color.RED, Color.red);
         endPanel.add(endButtonComponent.component, endButtonComponent.constraints);
 
         add(endPanel, BorderLayout.CENTER);

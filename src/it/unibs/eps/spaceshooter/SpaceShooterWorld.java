@@ -1,5 +1,6 @@
 package it.unibs.eps.spaceshooter;
 
+import javax.naming.NameNotFoundException;
 import javax.swing.*;
 import java.awt.*;
 import static it.unibs.eps.spaceshooter.MessageButton.*;
@@ -13,6 +14,7 @@ public class SpaceShooterWorld extends JFrame {
     private static Ranking ranking;
 
     public SpaceShooterWorld() {
+
         setTitle(GAME_TITLE);
         setSize(HEIGHT_FRAME, WIDTH_FRAME);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,7 +42,7 @@ public class SpaceShooterWorld extends JFrame {
         panel.add(nameField, fieldConstraints);
 
         // Creazione del pulsante "Inizia a giocare!"
-        ComponentWithConstraints startButton = createButton("Inizia a giocare!",  e , "Arial", Font.BOLD, 18, 0, 3, Color.LIGHT_GRAY, Color.DARK_GRAY);
+                ComponentWithConstraints startButton = createButton("Inizia a giocare!", this::startGame , smallcustomFont.getFontName(), Font.BOLD, 18, 0, 3, Color.LIGHT_GRAY, Color.DARK_GRAY);
         panel.add(startButton.component, startButton.constraints);
 
         // Creazione testo crediti
@@ -68,7 +70,7 @@ public class SpaceShooterWorld extends JFrame {
             return;
         }
 
-        JOptionPane.showMessageDialog(this, "Il gioco inizierà dopo aver confermato!");
+        //JOptionPane.showMessageDialog(this, "Il gioco inizierà dopo aver confermato!");
         dispose();
         new Game(playerName, playerScore); // Passa il nome del giocatore al gioco
     }
