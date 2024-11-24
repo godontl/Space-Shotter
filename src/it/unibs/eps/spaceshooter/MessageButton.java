@@ -2,12 +2,12 @@ package it.unibs.eps.spaceshooter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.IOException;
 
 public class MessageButton {
 
-    static Font customFont;
+    static Font customFont, littlecustomFont;
 
     // Blocco statico per caricare il font una sola volta
     static {
@@ -16,9 +16,14 @@ public class MessageButton {
             customFont = Font.createFont(Font.TRUETYPE_FONT, MessageButton.class.getResourceAsStream("/font/1up.ttf"));
             customFont = customFont.deriveFont(Font.PLAIN, 18); // Imposta la dimensione del font
 
+            littlecustomFont = Font.createFont(Font.TRUETYPE_FONT, MessageButton.class.getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"));
+            littlecustomFont = littlecustomFont.deriveFont(Font.PLAIN, 15);
+
             // Registra il font con il GraphicsEnvironment (opzionale)
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsEnvironment gi = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
+            gi.registerFont(littlecustomFont);
 
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
@@ -38,28 +43,34 @@ public class MessageButton {
     }
 
     // Metodo per creare un pulsante con vincoli
-    public static ComponentWithConstraints createButton(String text, int width, int height, ActionListener actionListener, String fontName, int fontStyle, int fontSize, int gridx, int gridy, Color background, Color foreground) {
-        JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(width, height));
+    public static ComponentWithConstraints createButton(String text, MouseListener mouseListener, String fontName, int fontStyle, int fontSize, int gridx, int gridy, Color foreground, Color foregroundOnCurs) {
+        JLabel textButton = new JLabel(text);
+        textButton.setFont(new Font(fontName, fontStyle, fontSize));
 
         // Usa il font personalizzato, se disponibile
         if (fontName != null) {
-            button.setFont(new Font(fontName, fontStyle, fontSize));
+            textButton.setFont(new Font(fontName, fontStyle, fontSize));
         } else {
-            button.setFont(new Font("Arial", fontStyle, fontSize)); // Fallback a un font standard
+            textButton.setFont(new Font("Arial", fontStyle, fontSize)); // Fallback a un font standard
         }
 
-        button.setBackground(background);
-        button.setForeground(foreground);
-        button.addActionListener(actionListener);
+        textButton.setForeground(foreground);
 
-        // Impostazione dei vincoli
+        // Cambia il cursore quando il mouse passa sopra
+        textButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        if (Cursor.HAND_CURSOR == Cursor.DEFAULT_CURSOR) {
+            textButton.setForeground(foregroundOnCurs);
+        }
+
+        // Aggiungi un MouseListener per l'azione di click
+        textButton.addMouseListener(mouseListener);
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = gridx;
         gbc.gridy = gridy;
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        return new ComponentWithConstraints(button, gbc);
+        return new ComponentWithConstraints(textButton, gbc);
     }
 
     // Metodo per creare un testo con vincoli

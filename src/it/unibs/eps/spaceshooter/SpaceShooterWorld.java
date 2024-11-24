@@ -24,11 +24,11 @@ public class SpaceShooterWorld extends JFrame {
 
 
         // Creazione testo benvenuto
-        ComponentWithConstraints welcomeText = createText("Benvenuto in " + GAME_TITLE + "!", customFont.getName(), Font.TRUETYPE_FONT, 25, 0, 0, Color.LIGHT_GRAY);
+        ComponentWithConstraints welcomeText = createText("Benvenuto in " + GAME_TITLE + "!", customFont.getName(), Font.BOLD, 25, 0, 0, Color.LIGHT_GRAY);
         panel.add(welcomeText.component, welcomeText.constraints);
 
         // Creazione etichetta per il nome
-        ComponentWithConstraints nameLabel = createText("Inserisci il tuo nome:", "Arial", Font.PLAIN, 14, 0, 1, Color.WHITE);
+        ComponentWithConstraints nameLabel = createText("Inserisci il tuo nome:", littlecustomFont.getName(), Font.PLAIN, 18, 0, 1, Color.WHITE);
         panel.add(nameLabel.component, nameLabel.constraints);
 
         // Creazione campo di testo per il nome
@@ -40,7 +40,7 @@ public class SpaceShooterWorld extends JFrame {
         panel.add(nameField, fieldConstraints);
 
         // Creazione del pulsante "Inizia a giocare!"
-        ComponentWithConstraints startButton = createButton("Inizia a giocare!", 200, 50, e -> startGame(), "Arial", Font.BOLD, 18, 0, 3, Color.DARK_GRAY, Color.LIGHT_GRAY);
+        ComponentWithConstraints startButton = createButton("Inizia a giocare!",  e , "Arial", Font.BOLD, 18, 0, 3, Color.LIGHT_GRAY, Color.DARK_GRAY);
         panel.add(startButton.component, startButton.constraints);
 
         // Creazione testo crediti
