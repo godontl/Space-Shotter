@@ -25,7 +25,7 @@ public class Game extends JFrame {
     private final JLabel nameLabel;
     private int gameTime = 0;
     private boolean gameOver = false;
-
+    private final int maxDistance = 100;
     private final Ranking ranking;
     private final Player player;
 
@@ -42,7 +42,7 @@ public class Game extends JFrame {
 
         // Pannello punteggio
         punteggioPanel = new JPanel();
-        punteggioPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        punteggioPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         punteggioPanel.setBackground(Color.DARK_GRAY);
 
         nameLabel = new JLabel("Giocatore: " + player.getName()+ "   ");
@@ -72,6 +72,7 @@ public class Game extends JFrame {
     }
 
     private void startGameLoop() {
+
         // Listener per i controlli
         addKeyListener(new KeyListener() {
             @Override
@@ -134,6 +135,10 @@ public class Game extends JFrame {
             while (projectileIterator.hasNext()) {
                 Proiettile proiettile = projectileIterator.next();
 
+                if (proiettile.getDistanceTraveled() > maxDistance) {
+                    projectileIterator.remove();
+                }
+
                 if (asteroide.checkCollisionWithProjectile(proiettile)) {
                     // Collisione rilevata: rimuovi asteroide e proiettile
                     asteroidIterator.remove();
@@ -192,30 +197,28 @@ public class Game extends JFrame {
         setLayout(new BorderLayout());
 
         JPanel endPanel = new JPanel(new GridBagLayout());
+        endPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20)); // Layout centrato
+        endPanel.setBackground(Color.DARK_GRAY);
 
         // Testo di fine gioco
-        ComponentWithConstraints lostTextComponent = createText("Hai perso!", "Arial", Font.BOLD, 20, 0, 0);
+        ComponentWithConstraints lostTextComponent = createText("Hai perso!", "Arial", Font.BOLD, 20, 0, 0, Color.WHITE);
         endPanel.add(lostTextComponent.component, lostTextComponent.constraints);
 
 
 
         // Crediti
-        ComponentWithConstraints creditTextComponent = createText("by NovaCode", "SanSerif", Font.ITALIC, 10, 0, 4);
+        ComponentWithConstraints creditTextComponent = createText("by NovaCode", "SanSerif", Font.ITALIC, 10, 0, 4, Color.LIGHT_GRAY);
         endPanel.add(creditTextComponent.component, creditTextComponent.constraints);
 
         // Creazione pulsanti
-        ComponentWithConstraints restartButtonComponent = createButton("Fai un'altra partita", 300, 25, e -> restartGame(), "Arial", Font.BOLD, 15, 0, 1);
+        ComponentWithConstraints restartButtonComponent = createButton("Fai un'altra partita", 300, 25, e -> restartGame(), "Arial", Font.BOLD, 15, 0, 1, Color.GREEN, Color.BLACK);
         endPanel.add(restartButtonComponent.component, restartButtonComponent.constraints);
 
-        ComponentWithConstraints rankingButtonComponent= createButton("Guarda classifica", 300,25, e -> rankingGame(), "Arial", Font.BOLD, 15, 0, 2);
+        ComponentWithConstraints rankingButtonComponent= createButton("Guarda classifica", 300,25, e -> rankingGame(), "Arial", Font.BOLD, 15, 0, 2, Color.BLUE, Color.WHITE);
         endPanel.add(rankingButtonComponent.component, rankingButtonComponent.constraints);
 
-        ComponentWithConstraints endButtonComponent = createButton("Esci", 300, 25, e -> closeGame(), "Arial", Font.BOLD, 15, 0, 3);
+        ComponentWithConstraints endButtonComponent = createButton("Esci", 300, 25, e -> closeGame(), "Arial", Font.BOLD, 15, 0, 3, Color.RED, Color.WHITE);
         endPanel.add(endButtonComponent.component, endButtonComponent.constraints);
-
-
-
-
 
         add(endPanel, BorderLayout.CENTER);
         revalidate();

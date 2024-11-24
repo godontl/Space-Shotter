@@ -20,14 +20,15 @@ public class SpaceShooterWorld extends JFrame {
 
         // Creazione del pannello principale
         JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(Color.BLACK);
 
 
         // Creazione testo benvenuto
-        ComponentWithConstraints welcomeText = createText("Benvenuto in " + GAME_TITLE + "!", "Arial", Font.BOLD, 20, 0, 0);
+        ComponentWithConstraints welcomeText = createText("Benvenuto in " + GAME_TITLE + "!", "1up", Font.TRUETYPE_FONT, 20, 0, 0, Color.LIGHT_GRAY);
         panel.add(welcomeText.component, welcomeText.constraints);
 
         // Creazione etichetta per il nome
-        ComponentWithConstraints nameLabel = createText("Inserisci il tuo nome:", "Arial", Font.PLAIN, 14, 0, 1);
+        ComponentWithConstraints nameLabel = createText("Inserisci il tuo nome:", "Arial", Font.PLAIN, 14, 0, 1, Color.WHITE);
         panel.add(nameLabel.component, nameLabel.constraints);
 
         // Creazione campo di testo per il nome
@@ -39,11 +40,11 @@ public class SpaceShooterWorld extends JFrame {
         panel.add(nameField, fieldConstraints);
 
         // Creazione del pulsante "Inizia a giocare!"
-        ComponentWithConstraints startButton = createButton("Inizia a giocare!", 200, 50, e -> startGame(), "Arial", Font.BOLD, 18, 0, 3);
+        ComponentWithConstraints startButton = createButton("Inizia a giocare!", 200, 50, e -> startGame(), "Arial", Font.BOLD, 18, 0, 3, Color.DARK_GRAY, Color.LIGHT_GRAY);
         panel.add(startButton.component, startButton.constraints);
 
         // Creazione testo crediti
-        ComponentWithConstraints creditText = createText("by NovaCode", "SanSerif", Font.ITALIC, 10, 0, 4);
+        ComponentWithConstraints creditText = createText("by NovaCode", "SanSerif", Font.ITALIC, 10, 0, 4, Color.WHITE);
         panel.add(creditText.component, creditText.constraints);
 
         // Aggiunta del pannello al frame

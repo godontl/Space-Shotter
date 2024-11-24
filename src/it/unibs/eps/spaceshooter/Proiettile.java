@@ -17,12 +17,12 @@ import java.io.IOException;
 public class Proiettile extends Thread{
 
     private static final int LUNGHEZZA = 5;
-    private static final int ALTEZZA = 10;
+    private static final int ALTEZZA = 20;
     private static final int VELOCITA = 2;
 
     private int x;
     private int y;
-    private int tempo = 0;
+    private int distance = 0;
     private BufferedImage proiettileImage;
 
     public Proiettile(int x, int y) {
@@ -60,9 +60,12 @@ public class Proiettile extends Thread{
 
     public void run() {
         y = y - VELOCITA;
+        distance += VELOCITA;
     }
 
-
+    public int getDistanceTraveled(){
+        return distance;
+    }
 
 
     public int getWidth() {
