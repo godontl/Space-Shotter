@@ -1,16 +1,16 @@
 package it.unibs.eps.spaceshooter;
+import java.io.Serializable;
 
 
 
-
-public class Player {
+public class Player implements Serializable {
     private String name;
     private int score=0;
 
     // Costruttore per inizializzare il giocatore
     public Player(String name, int score) {
         this.name = name;
-        this.score =score; // Il punteggio parte da zero
+        this.score = score; // Il punteggio parte da zero
     }
 
     public Player(Player player) {

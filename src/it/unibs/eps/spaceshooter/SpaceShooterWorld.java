@@ -62,7 +62,7 @@ public class SpaceShooterWorld extends JFrame {
         return ranking;
     }
 
-    private void startGame() {
+    void startGame() {
         String playerName = nameField.getText().trim();
         int playerScore=0;
         if (playerName.isEmpty()) {

@@ -1,13 +1,7 @@
 package it.unibs.eps.spaceshooter;
 
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
-import javax.swing.Timer;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -16,7 +10,7 @@ import java.io.IOException;
 
 public class Proiettile extends Thread{
 
-    private static final int LUNGHEZZA = 5;
+    private static final int LUNGHEZZA = 20;
     private static final int ALTEZZA = 20;
     private static final int VELOCITA = 2;
 
@@ -26,8 +20,8 @@ public class Proiettile extends Thread{
     private BufferedImage proiettileImage;
 
     public Proiettile(int x, int y) {
-        this.x = x-2;
-        this.y = y-10;
+        this.x = x-LUNGHEZZA/2;
+        this.y = y-ALTEZZA;
 
         try {
             proiettileImage = ImageIO.read(getClass().getResource("/images/proiettile.png"));

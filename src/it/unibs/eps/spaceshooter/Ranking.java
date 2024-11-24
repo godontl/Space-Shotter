@@ -1,10 +1,17 @@
 package it.unibs.eps.spaceshooter;
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import it.unibs.eps.spaceshooter.MessageButton;
 
-public class Ranking {
+import static it.unibs.eps.spaceshooter.MessageButton.createButton;
+import static it.unibs.eps.spaceshooter.MessageButton.smallcustomFont;
+
+public class Ranking implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final List<Player> rankingList;
 
     public Ranking() {
@@ -22,7 +29,7 @@ public class Ranking {
     }
 
     // Metodo per visualizzare la classifica in una finestra
-    public void showRanking(Game game) {
+    public void showRanking(Game game, SpaceShooterWorld spaceShooterWorld) {
         // Crea una finestra per la classifica
         JFrame rankingWindow = new JFrame("Classifica");
         rankingWindow.setSize(500, 400);
@@ -68,29 +75,14 @@ public class Ranking {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 10));
         buttonPanel.setBackground(Color.DARK_GRAY);
 
+
         // Pulsante "Chiudi"
-        JButton closeButton = new JButton("Chiudi");
-        closeButton.setFont(new Font("Arial", Font.BOLD, 14));
-        closeButton.setForeground(Color.WHITE);
-        closeButton.setBackground(Color.RED);
-        closeButton.setFocusPainted(false);
-        closeButton.addActionListener(e -> {
-            rankingWindow.dispose();  // Chiudi la finestra della classifica
-            game.restartGame();  // Chiama restartGame di Game per riavviare la partita
-        });
-        buttonPanel.add(closeButton);
+        MessageButton.ComponentWithConstraints closeButtonComponent = createButton("Chiudi", game::restartGame, smallcustomFont.getFontName(), Font.BOLD, 14, 0, 3, Color.RED, Color.RED);
+        buttonPanel.add(closeButtonComponent.component, closeButtonComponent.constraints);
 
         // Pulsante "Nuova Partita"
-        JButton newGameButton = new JButton("Nuova Partita");
-        newGameButton.setFont(new Font("Arial", Font.BOLD, 14));
-        newGameButton.setForeground(Color.WHITE);
-        newGameButton.setBackground(Color.GREEN);
-        newGameButton.setFocusPainted(false);
-        newGameButton.addActionListener(e -> {
-            rankingWindow.dispose();
-            new SpaceShooterWorld();  // Avvia una nuova partita
-        });
-        buttonPanel.add(newGameButton);
+        MessageButton.ComponentWithConstraints newGameComponent = createButton("Nuova Partita", spaceShooterWorld::startGame, smallcustomFont.getFontName(), Font.BOLD, 14, 0, 3, Color.GREEN, Color.GREEN);
+        buttonPanel.add(newGameComponent.component, newGameComponent.constraints);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
@@ -99,5 +91,9 @@ public class Ranking {
 
         // Mostra la finestra
         rankingWindow.setVisible(true);
+    }
+
+    public String toString(){
+        return rankingList.toString();
     }
 }

@@ -12,7 +12,7 @@ public class Astronave {
     public static final int ALTEZZA = 56;
     public static final int LUNGHEZZA = 25;
     private int x = 180;
-    private int y = 650;
+    private int y = 550;
 
     private int velocitaX;
     private int velocitaY;

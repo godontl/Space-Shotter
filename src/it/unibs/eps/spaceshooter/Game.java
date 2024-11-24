@@ -251,7 +251,7 @@ public class Game extends JFrame {
     // Metodo per la gestione della classifica (se desiderato)
     private void rankingGame() {
         if (ranking.getRankingList().size() > 0) {
-            ranking.showRanking(this);  // Mostra la classifica
+            ranking.showRanking(this, new SpaceShooterWorld());  // Mostra la classifica
         }
     }
 

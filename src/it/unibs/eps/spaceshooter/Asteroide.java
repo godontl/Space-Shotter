@@ -17,7 +17,7 @@ public class Asteroide extends Thread {
         this.x = x;
         this.y = y;
         this.width = rand.nextInt(20) + 30;
-        this.height = rand.nextInt(20) + 30;
+        this.height = this.width;
 
         // Caricamento immagine
         try {
