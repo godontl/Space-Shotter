@@ -24,7 +24,7 @@ public class SpaceShooterWorld extends JFrame {
 
 
         // Creazione testo benvenuto
-        ComponentWithConstraints welcomeText = createText("Benvenuto in " + GAME_TITLE + "!", "1up", Font.TRUETYPE_FONT, 20, 0, 0, Color.LIGHT_GRAY);
+        ComponentWithConstraints welcomeText = createText("Benvenuto in " + GAME_TITLE + "!", customFont.getName(), Font.TRUETYPE_FONT, 25, 0, 0, Color.LIGHT_GRAY);
         panel.add(welcomeText.component, welcomeText.constraints);
 
         // Creazione etichetta per il nome

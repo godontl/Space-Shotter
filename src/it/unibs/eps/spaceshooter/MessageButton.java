@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class MessageButton {
 
-    private static Font customFont;
+    static Font customFont;
 
     // Blocco statico per caricare il font una sola volta
     static {
